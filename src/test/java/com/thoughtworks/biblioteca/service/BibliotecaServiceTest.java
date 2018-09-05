@@ -89,7 +89,7 @@ public class BibliotecaServiceTest {
         assertThat(actual).contains(expectedBookDetail2);
         assertThat(actual).contains(expectedBookDetail3);
     }
-
+    
     @Test
     public void should_access_main_menu() {
         //given
@@ -101,5 +101,18 @@ public class BibliotecaServiceTest {
         String actual = bytes.toString();
         //then
         assertThat(actual).contains("List Books");
+    }
+
+    @Test
+    public void should_notify_invalid_option() {
+        //given
+        ByteArrayInputStream in = new ByteArrayInputStream("4".getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.mainMenu();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("Select a valid option!");
     }
 }

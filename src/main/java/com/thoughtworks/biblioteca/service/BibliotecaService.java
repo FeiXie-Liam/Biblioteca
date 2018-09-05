@@ -28,6 +28,7 @@ public class BibliotecaService {
                 listAllBooks();
                 break;
             default:
+                System.out.println("Select a valid option!");
         }
     }
 
