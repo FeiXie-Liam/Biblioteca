@@ -150,7 +150,7 @@ public class BibliotecaServiceTest {
         BibliotecaService bibliotecaService = new BibliotecaService();
         int originSize = bibliotecaService.getBiblioteca().getBooks().size();
         //when
-        bibliotecaService.checkout(1);
+        bibliotecaService.checkoutBook(1);
         //then
         assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
     }

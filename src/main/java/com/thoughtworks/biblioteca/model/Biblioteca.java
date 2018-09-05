@@ -1,15 +1,17 @@
 package com.thoughtworks.biblioteca.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Biblioteca {
     List<Book> books;
 

@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -93,16 +92,16 @@ public class BibliotecaService {
     }
 
     public void listAllBooks() {
-        System.out.println("Please select checkout book id:");
+        System.out.println("Please select checkoutBook book id:");
         List<Book> books = biblioteca.getBooks();
         for (int i = 0; i < books.size(); i++) {
             System.out.println(books.get(i).toString());
         }
         int option = sc.nextInt();
-        checkout(option);
+        checkoutBook(option);
     }
 
-    public void checkout(int bookId) {
+    public void checkoutBook(int bookId) {
         boolean succeed = biblioteca.checkoutBook(bookId);
         if (succeed) {
             System.out.println("Thank you! Enjoy the book.");

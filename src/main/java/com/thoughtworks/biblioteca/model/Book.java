@@ -2,12 +2,9 @@ package com.thoughtworks.biblioteca.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +16,7 @@ public class Book {
     private String name;
     private String author;
     private String publishYear;
+    @Builder.Default
     private boolean checkout = false;
 
     @Override
