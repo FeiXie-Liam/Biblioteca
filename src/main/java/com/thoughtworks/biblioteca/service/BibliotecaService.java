@@ -18,17 +18,22 @@ public class BibliotecaService {
     }
 
     public void mainMenu() {
-        String options = "----------\n1. List Books";
-        System.out.println(options);
+        while (true) {
+            String options = "----------\n1. List Books";
+            System.out.println(options);
 
-        int option = sc.nextInt();
+            int option = sc.nextInt();
 
-        switch (option) {
-            case 1:
-                listAllBooks();
-                break;
-            default:
-                System.out.println("Select a valid option!");
+            switch (option) {
+                case 1:
+                    listAllBooks();
+                    break;
+                case 2:
+                    System.out.println("bye!");
+                    return;
+                default:
+                    System.out.println("Select a valid option!");
+            }
         }
     }
 

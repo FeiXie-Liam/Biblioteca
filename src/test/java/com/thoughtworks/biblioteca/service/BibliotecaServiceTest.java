@@ -115,4 +115,17 @@ public class BibliotecaServiceTest {
         //then
         assertThat(actual).contains("Select a valid option!");
     }
+
+    @Test
+    public void should_continue_until_choose_quit() {
+        //given
+        ByteArrayInputStream in = new ByteArrayInputStream("1\n2".getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.mainMenu();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("bye!");
+    }
 }
