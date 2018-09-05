@@ -1,12 +1,13 @@
 package com.thoughtworks.biblioteca.service;
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
-import com.thoughtworks.biblioteca.model.Biblioteca;
 import com.thoughtworks.biblioteca.model.Book;
+import com.thoughtworks.biblioteca.utils.Options;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BibliotecaServiceTest {
-    PrintStream console = null;
-    ByteOutputStream bytes = null;
+    private ByteOutputStream bytes = null;
+    private final int INVALID_OPTION = 8;
+    private final int VALID_CHECKOUT = 1;
+    private final int VALID_RETURN_ID = 3;
 
     @Before
     public void setUp() {
@@ -39,6 +42,9 @@ public class BibliotecaServiceTest {
     @Test
     public void should_list_all_books() {
         //given
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         String expected_book1 = "Head First Java";
         String expected_book2 = "Refactor";
@@ -55,10 +61,14 @@ public class BibliotecaServiceTest {
     @Test
     public void should_list_all_books_details() {
         //given
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         List<Book> books = new ArrayList<>();
         books.add(Book
                 .builder()
+                .id(0)
                 .name("Head First Java")
                 .author("Bert Bates")
                 .publishYear("2005")
@@ -66,6 +76,7 @@ public class BibliotecaServiceTest {
         );
         books.add(Book
                 .builder()
+                .id(1)
                 .name("Refactoring")
                 .author("Martin Fowler")
                 .publishYear("2003")
@@ -73,6 +84,7 @@ public class BibliotecaServiceTest {
         );
         books.add(Book
                 .builder()
+                .id(2)
                 .name("Test-driven Development:By Example")
                 .author("Kent Beck")
                 .publishYear("2004")
@@ -89,24 +101,26 @@ public class BibliotecaServiceTest {
         assertThat(actual).contains(expectedBookDetail2);
         assertThat(actual).contains(expectedBookDetail3);
     }
-    
+
     @Test
     public void should_access_main_menu() {
         //given
-        ByteArrayInputStream in = new ByteArrayInputStream("1".getBytes());
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         //when
         bibliotecaService.mainMenu();
         String actual = bytes.toString();
         //then
-        assertThat(actual).contains("List Books");
+        assertThat(actual).contains("LIST_ALL_BOOKS");
     }
 
     @Test
     public void should_notify_invalid_option() {
         //given
-        ByteArrayInputStream in = new ByteArrayInputStream("4".getBytes());
+        String input = INVALID_OPTION + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         //when
@@ -119,7 +133,8 @@ public class BibliotecaServiceTest {
     @Test
     public void should_continue_until_choose_quit() {
         //given
-        ByteArrayInputStream in = new ByteArrayInputStream("1\n2".getBytes());
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         //when
@@ -127,5 +142,76 @@ public class BibliotecaServiceTest {
         String actual = bytes.toString();
         //then
         assertThat(actual).contains("bye!");
+    }
+
+    @Test
+    public void should_remove_book_when_checkout() {
+        //given
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        //when
+        Book checkoutBook = bibliotecaService.checkout(1);
+        //then
+        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
+        assertThat(checkoutBook.getName()).isEqualTo("Refactoring");
+        assertThat(checkoutBook.getAuthor()).isEqualTo("Martin Fowler");
+        assertThat(checkoutBook.getPublishYear()).isEqualTo("2003");
+    }
+
+    @Test
+    public void should_checkout_successful() {
+        //given
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        //when
+        bibliotecaService.mainMenu();
+        String actual = bytes.toString();
+        //then
+        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
+        assertThat(actual).contains("Thank you! Enjoy the book");
+    }
+
+    @Test
+    public void should_notify_customer_when_checkout_failure() {
+        //given
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + INVALID_OPTION + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.mainMenu();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("That book is not available.");
+    }
+
+    @Test
+    public void should_add_book_when_customer_return_book() {
+        //given
+        String input = String.valueOf(VALID_RETURN_ID);
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        //when
+        bibliotecaService.returnBook();
+        //then
+        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize + 1);
+    }
+
+    @Test
+    public void should_notify_customer_return_success() {
+        String input = String.valueOf(VALID_RETURN_ID);
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.returnBook();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("Thank you for returning the book.");
     }
 }
