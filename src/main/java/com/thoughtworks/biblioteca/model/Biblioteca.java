@@ -18,13 +18,26 @@ public class Biblioteca {
     }
 
     public boolean returnBook(int bookId) {
-        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId).collect(Collectors.toList());
+        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && book.isCheckout()).collect(Collectors.toList());
         if(selectedBook.size() == 0){
             return false;
         }
         books.forEach(book -> {
             if(book.getId()==bookId){
                 book.setCheckout(false);
+            }
+        });
+        return true;
+    }
+
+    public boolean checkoutBook(int bookId) {
+        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && !book.isCheckout()).collect(Collectors.toList());
+        if(selectedBook.size() == 0){
+            return false;
+        }
+        books.forEach(book -> {
+            if(book.getId()==bookId){
+                book.setCheckout(true);
             }
         });
         return true;

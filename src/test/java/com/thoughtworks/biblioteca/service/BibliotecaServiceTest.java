@@ -150,12 +150,9 @@ public class BibliotecaServiceTest {
         BibliotecaService bibliotecaService = new BibliotecaService();
         int originSize = bibliotecaService.getBiblioteca().getBooks().size();
         //when
-        Book checkoutBook = bibliotecaService.checkout(1);
+        bibliotecaService.checkout(1);
         //then
         assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
-        assertThat(checkoutBook.getName()).isEqualTo("Refactoring");
-        assertThat(checkoutBook.getAuthor()).isEqualTo("Martin Fowler");
-        assertThat(checkoutBook.getPublishYear()).isEqualTo("2003");
     }
 
     @Test
@@ -213,5 +210,18 @@ public class BibliotecaServiceTest {
         String actual = bytes.toString();
         //then
         assertThat(actual).contains("Thank you for returning the book.");
+    }
+
+    @Test
+    public void should_notify_customer_return_failure() {
+        String input = String.valueOf(INVALID_OPTION);
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.returnBook();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("That is not a valid book to return.");
     }
 }
