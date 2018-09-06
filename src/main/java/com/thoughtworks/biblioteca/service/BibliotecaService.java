@@ -6,7 +6,6 @@ import com.thoughtworks.biblioteca.utils.Options;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,9 +32,12 @@ public class BibliotecaService {
                     listAllBooks();
                     break;
                 case 1:
-                    returnBook();
+                    checkoutBook();
                     break;
                 case 2:
+                    returnBook();
+                    break;
+                case 3:
                     System.out.println("bye!");
                     return;
                 default:
@@ -46,7 +48,7 @@ public class BibliotecaService {
 
     private void getMainOptions() {
         System.out.println("----------");
-        Options[] options = {Options.LIST_ALL_BOOKS, Options.RETURN_BOOK, Options.QUIT};
+        Options[] options = {Options.LIST_ALL_BOOKS, Options.CHECKOUT_BOOK, Options.RETURN_BOOK, Options.QUIT};
         for (int i = 0; i < options.length; i++) {
             System.out.println(options[i].ordinal() + ": " + options[i].name());
         }
@@ -54,54 +56,19 @@ public class BibliotecaService {
 
     private void createBooks() {
         biblioteca = new Biblioteca();
-        List<Book> books = new ArrayList<>();
-        books.add(Book
-                .builder()
-                .id(0)
-                .name("Head First Java")
-                .author("Bert Bates")
-                .publishYear("2005")
-                .build()
-        );
-        books.add(Book
-                .builder()
-                .id(1)
-                .name("Refactoring")
-                .author("Martin Fowler")
-                .publishYear("2003")
-                .build()
-        );
-        books.add(Book
-                .builder()
-                .id(2)
-                .name("Test-driven Development:By Example")
-                .author("Kent Beck")
-                .publishYear("2004")
-                .build()
-        );
-        books.add(Book
-                .builder()
-                .id(3)
-                .name("Test-driven Development:By Example")
-                .author("Kent Beck")
-                .publishYear("2004")
-                .checkout(true)
-                .build()
-        );
-        biblioteca.setBooks(books);
+        biblioteca.initBooks();
     }
 
     public void listAllBooks() {
-        System.out.println("Please select checkoutBook book id:");
-        List<Book> books = biblioteca.getBooks();
+        List<Book> books = biblioteca.getValidBooks();
         for (int i = 0; i < books.size(); i++) {
             System.out.println(books.get(i).toString());
         }
-        int option = sc.nextInt();
-        checkoutBook(option);
     }
 
-    public void checkoutBook(int bookId) {
+    public void checkoutBook() {
+        System.out.println("Please select checkoutBook book id:");
+        int bookId = sc.nextInt();
         boolean succeed = biblioteca.checkoutBook(bookId);
         if (succeed) {
             System.out.println("Thank you! Enjoy the book.");

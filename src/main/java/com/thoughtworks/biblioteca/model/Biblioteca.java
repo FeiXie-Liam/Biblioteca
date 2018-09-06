@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class Biblioteca {
     List<Book> books;
 
-    public List<Book> getBooks() {
+    public List<Book> getValidBooks() {
         return books.stream().filter(book -> !book.isCheckout()).collect(Collectors.toList());
     }
 
@@ -43,5 +44,42 @@ public class Biblioteca {
             }
         });
         return true;
+    }
+
+    public void initBooks() {
+        books = new ArrayList<>();
+        books.add(Book
+                .builder()
+                .id(0)
+                .name("Head First Java")
+                .author("Bert Bates")
+                .publishYear("2005")
+                .build()
+        );
+        books.add(Book
+                .builder()
+                .id(1)
+                .name("Refactoring")
+                .author("Martin Fowler")
+                .publishYear("2003")
+                .build()
+        );
+        books.add(Book
+                .builder()
+                .id(2)
+                .name("Test-driven Development:By Example")
+                .author("Kent Beck")
+                .publishYear("2004")
+                .build()
+        );
+        books.add(Book
+                .builder()
+                .id(3)
+                .name("C++ primer")
+                .author("Stanley B. Lippman")
+                .publishYear("2013")
+                .checkout(true)
+                .build()
+        );
     }
 }

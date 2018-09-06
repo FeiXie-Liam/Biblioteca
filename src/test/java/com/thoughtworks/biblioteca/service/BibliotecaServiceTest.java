@@ -105,7 +105,7 @@ public class BibliotecaServiceTest {
     @Test
     public void should_access_main_menu() {
         //given
-        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
@@ -133,7 +133,7 @@ public class BibliotecaServiceTest {
     @Test
     public void should_continue_until_choose_quit() {
         //given
-        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
@@ -147,34 +147,37 @@ public class BibliotecaServiceTest {
     @Test
     public void should_remove_book_when_checkout() {
         //given
+        String input = String.valueOf(VALID_CHECKOUT);
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
         //when
-        bibliotecaService.checkoutBook(1);
+        bibliotecaService.checkoutBook();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
+        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize - 1);
     }
 
     @Test
     public void should_checkout_successful() {
         //given
-        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        String input = Options.CHECKOUT_BOOK.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
         //when
         bibliotecaService.mainMenu();
         String actual = bytes.toString();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize - 1);
+        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize - 1);
         assertThat(actual).contains("Thank you! Enjoy the book");
     }
 
     @Test
     public void should_notify_customer_when_checkout_failure() {
         //given
-        String input = Options.LIST_ALL_BOOKS.ordinal() + "\n" + INVALID_OPTION + "\n" + Options.QUIT.ordinal();
+        String input = Options.CHECKOUT_BOOK.ordinal() + "\n" + INVALID_OPTION + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
@@ -192,11 +195,11 @@ public class BibliotecaServiceTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getBooks().size();
+        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
         //when
         bibliotecaService.returnBook();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getBooks().size()).isEqualTo(originSize + 1);
+        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize + 1);
     }
 
     @Test
