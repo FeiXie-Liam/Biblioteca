@@ -7,6 +7,12 @@ public enum Options {
             return String.valueOf(super.ordinal());
         }
     },
+    LIST_ALL_MOVIES {
+        @Override
+        public String toString() {
+            return String.valueOf(super.ordinal());
+        }
+    },
     CHECKOUT_BOOK {
         @Override
         public String toString() {
@@ -14,6 +20,12 @@ public enum Options {
         }
     },
     RETURN_BOOK {
+        @Override
+        public String toString() {
+            return String.valueOf(super.ordinal());
+        }
+    },
+    CHECKOUT_MOVIE {
         @Override
         public String toString() {
             return String.valueOf(super.ordinal());

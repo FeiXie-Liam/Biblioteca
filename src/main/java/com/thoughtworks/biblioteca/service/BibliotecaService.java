@@ -2,6 +2,7 @@ package com.thoughtworks.biblioteca.service;
 
 import com.thoughtworks.biblioteca.model.Biblioteca;
 import com.thoughtworks.biblioteca.model.Book;
+import com.thoughtworks.biblioteca.model.Movie;
 import com.thoughtworks.biblioteca.utils.Options;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,8 @@ public class BibliotecaService {
     private Scanner sc;
 
     public BibliotecaService() {
-        createBooks();
+        biblioteca = new Biblioteca();
+        init();
         sc = new Scanner(System.in);
         System.out.println("Welcome Biblioteca!");
     }
@@ -32,12 +34,18 @@ public class BibliotecaService {
                     listAllBooks();
                     break;
                 case 1:
-                    checkoutBook();
+                    listAllMovies();
                     break;
                 case 2:
-                    returnBook();
+                    checkoutBook();
                     break;
                 case 3:
+                    returnBook();
+                    break;
+                case 4:
+                    checkoutMovie();
+                    break;
+                case 5:
                     System.out.println("bye!");
                     return;
                 default:
@@ -48,26 +56,34 @@ public class BibliotecaService {
 
     private void getMainOptions() {
         System.out.println("----------");
-        Options[] options = {Options.LIST_ALL_BOOKS, Options.CHECKOUT_BOOK, Options.RETURN_BOOK, Options.QUIT};
+        Options[] options = {Options.LIST_ALL_BOOKS, Options.LIST_ALL_MOVIES, Options.CHECKOUT_BOOK, Options
+                .RETURN_BOOK, Options.CHECKOUT_MOVIE, Options.QUIT};
         for (int i = 0; i < options.length; i++) {
             System.out.println(options[i].ordinal() + ": " + options[i].name());
         }
     }
 
-    private void createBooks() {
-        biblioteca = new Biblioteca();
-        biblioteca.initBooks();
+    private void init() {
+        biblioteca.init();
     }
+
 
     public void listAllBooks() {
         List<Book> books = biblioteca.getValidBooks();
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println(books.get(i).toString());
+        for (Book book : books) {
+            System.out.println(book.toString());
+        }
+    }
+
+    public void listAllMovies() {
+        List<Movie> movies = biblioteca.getValidMovies();
+        for (Movie movie : movies) {
+            System.out.println(movie.toString());
         }
     }
 
     public void checkoutBook() {
-        System.out.println("Please select checkoutBook book id:");
+        System.out.println("Please select checkout book id:");
         int bookId = sc.nextInt();
         boolean succeed = biblioteca.checkoutBook(bookId);
         if (succeed) {
@@ -85,6 +101,17 @@ public class BibliotecaService {
             System.out.println("Thank you for returning the book.");
         } else {
             System.out.println("That is not a valid book to return.");
+        }
+    }
+
+    public void checkoutMovie() {
+        System.out.println("Please select checkout movie id:");
+        int movieId = sc.nextInt();
+        boolean succeed = biblioteca.checkoutMovie(movieId);
+        if (succeed) {
+            System.out.println("Thank you! Enjoy the movie.");
+        } else {
+            System.out.println("That movie is not available.");
         }
     }
 }

@@ -227,4 +227,38 @@ public class BibliotecaServiceTest {
         //then
         assertThat(actual).contains("That is not a valid book to return.");
     }
+
+    @Test
+    public void should_list_all_movies() {
+        //given
+        String input = Options.LIST_ALL_MOVIES.ordinal() + "\n" + Options.QUIT.ordinal();
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+
+        String expectedMovieDetail1 = "0: name:肖生克的救赎, director:Frank Darabont, publish year:1994, rating:9.6";
+        String expectedMovieDetail2 = "1: name:霸王别姬, director:陈凯歌, publish year:1993, rating:9.5";
+        String expectedMovieDetail3 = "2: name:这个杀手不太冷, director:Luc Besson, publish year:1994, rating:9.4";
+        //when
+        bibliotecaService.listAllMovies();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains(expectedMovieDetail1);
+        assertThat(actual).contains(expectedMovieDetail2);
+        assertThat(actual).contains(expectedMovieDetail3);
+    }
+
+    @Test
+    public void should_remove_movie_when_checkout() {
+        //given
+        String input = String.valueOf(VALID_CHECKOUT);
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        int originSize = bibliotecaService.getBiblioteca().getValidMovies().size();
+        //when
+        bibliotecaService.checkoutMovie();
+        //then
+        assertThat(bibliotecaService.getBiblioteca().getValidMovies().size()).isEqualTo(originSize - 1);
+    }
 }

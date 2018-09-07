@@ -14,19 +14,25 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class Biblioteca {
-    List<Book> books;
+    private List<Book> books;
+    private ArrayList<Movie> movies;
 
     public List<Book> getValidBooks() {
         return books.stream().filter(book -> !book.isCheckout()).collect(Collectors.toList());
     }
 
+    public List<Movie> getValidMovies() {
+        return movies.stream().filter(movie -> !movie.isCheckout()).collect(Collectors.toList());
+    }
+
     public boolean returnBook(int bookId) {
-        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && book.isCheckout()).collect(Collectors.toList());
-        if(selectedBook.size() == 0){
+        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && book.isCheckout()).collect
+                (Collectors.toList());
+        if (selectedBook.size() == 0) {
             return false;
         }
         books.forEach(book -> {
-            if(book.getId()==bookId){
+            if (book.getId() == bookId) {
                 book.setCheckout(false);
             }
         });
@@ -34,19 +40,56 @@ public class Biblioteca {
     }
 
     public boolean checkoutBook(int bookId) {
-        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && !book.isCheckout()).collect(Collectors.toList());
-        if(selectedBook.size() == 0){
+        List<Book> selectedBook = books.stream().filter(book -> book.getId() == bookId && !book.isCheckout()).collect
+                (Collectors.toList());
+        if (selectedBook.size() == 0) {
             return false;
         }
         books.forEach(book -> {
-            if(book.getId()==bookId){
+            if (book.getId() == bookId) {
                 book.setCheckout(true);
             }
         });
         return true;
     }
 
-    public void initBooks() {
+    public void init() {
+        initBooks();
+        initMovies();
+    }
+
+    private void initMovies() {
+        movies = new ArrayList<>();
+        movies.add(Movie
+                .builder()
+                .id(0)
+                .name("肖生克的救赎")
+                .director("Frank Darabont")
+                .publishYear("1994")
+                .rating("9.6")
+                .build()
+        );
+        movies.add(Movie
+                .builder()
+                .id(1)
+                .name("霸王别姬")
+                .director("陈凯歌")
+                .publishYear("1993")
+                .rating("9.5")
+                .build()
+        );
+        movies.add(Movie
+                .builder()
+                .id(2)
+                .name("这个杀手不太冷")
+                .director("Luc Besson")
+                .publishYear("1994")
+                .rating("9.4")
+                .build()
+        );
+    }
+
+    private void initBooks() {
         books = new ArrayList<>();
         books.add(Book
                 .builder()
@@ -81,5 +124,19 @@ public class Biblioteca {
                 .checkout(true)
                 .build()
         );
+    }
+
+    public boolean checkoutMovie(int movieId) {
+        List<Movie> selectedMovie = movies.stream().filter(movie -> movie.getId() == movieId && !movie.isCheckout()).collect
+                (Collectors.toList());
+        if (selectedMovie.size() == 0) {
+            return false;
+        }
+        movies.forEach(movie -> {
+            if (movie.getId() == movieId) {
+                movie.setCheckout(true);
+            }
+        });
+        return true;
     }
 }
