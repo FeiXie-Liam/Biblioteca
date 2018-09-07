@@ -15,6 +15,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BibliotecaServiceTest {
+    private final String ERROR_PASSWORD = "12345678";
+    private final String PREDEFINED_LIB_NUM = "111-2222";
+    private final String PREDEFINED_PASSWORD = "1234";
     private ByteOutputStream bytes = null;
     private final int INVALID_OPTION = 8;
     private final int VALID_CHECKOUT = 1;
@@ -260,5 +263,37 @@ public class BibliotecaServiceTest {
         bibliotecaService.checkoutMovie();
         //then
         assertThat(bibliotecaService.getBiblioteca().getValidMovies().size()).isEqualTo(originSize - 1);
+    }
+
+    @Test
+    public void should_login_success() {
+        //given
+        String input = PREDEFINED_LIB_NUM + "\n" + PREDEFINED_PASSWORD;
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.login();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("Please enter your library number:");
+        assertThat(actual).contains("Please enter your password:");
+        assertThat(actual).contains("login succeed!");
+    }
+
+    @Test
+    public void should_login_failure() {
+        //given
+        String input = PREDEFINED_LIB_NUM + "\n" + ERROR_PASSWORD;
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.login();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("Please enter your library number:");
+        assertThat(actual).contains("Please enter your password:");
+        assertThat(actual).contains("library number or password error!");
     }
 }

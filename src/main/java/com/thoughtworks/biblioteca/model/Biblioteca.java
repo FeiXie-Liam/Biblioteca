@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 @Setter
 public class Biblioteca {
     private List<Book> books;
-    private ArrayList<Movie> movies;
+    private List<Movie> movies;
+    private List<User> users;
 
     public List<Book> getValidBooks() {
         return books.stream().filter(book -> !book.isCheckout()).collect(Collectors.toList());
@@ -56,6 +57,23 @@ public class Biblioteca {
     public void init() {
         initBooks();
         initMovies();
+        initUsers();
+    }
+
+    private void initUsers() {
+        users = new ArrayList<>();
+        users.add(User
+                .builder()
+                .libNum("111-2222")
+                .password("1234")
+                .build()
+        );
+        users.add(User
+                .builder()
+                .libNum("123-3333")
+                .password("2345")
+                .build()
+        );
     }
 
     private void initMovies() {
@@ -127,7 +145,8 @@ public class Biblioteca {
     }
 
     public boolean checkoutMovie(int movieId) {
-        List<Movie> selectedMovie = movies.stream().filter(movie -> movie.getId() == movieId && !movie.isCheckout()).collect
+        List<Movie> selectedMovie = movies.stream().filter(movie -> movie.getId() == movieId && !movie.isCheckout())
+                .collect
                 (Collectors.toList());
         if (selectedMovie.size() == 0) {
             return false;
@@ -137,6 +156,20 @@ public class Biblioteca {
                 movie.setCheckout(true);
             }
         });
+        return true;
+    }
+
+    public boolean checkUser(String libNum, String password) {
+        int size = users
+                .stream()
+                .filter(user ->
+                        user.getLibNum().equals(libNum) &&
+                                user.getPassword().equals(password))
+                .collect(Collectors.toList())
+                .size();
+        if (size == 0) {
+            return false;
+        }
         return true;
     }
 }

@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class BibliotecaService {
     private Biblioteca biblioteca;
     private Scanner sc;
+    private boolean isLogin = false;
 
     public BibliotecaService() {
         biblioteca = new Biblioteca();
@@ -112,6 +113,27 @@ public class BibliotecaService {
             System.out.println("Thank you! Enjoy the movie.");
         } else {
             System.out.println("That movie is not available.");
+        }
+    }
+
+    public void login() {
+        if (!isLogin) {
+            System.out.println("Please enter your library number:");
+            String libNum = sc.next();
+            System.out.println("Please enter your password:");
+            String password = sc.next();
+            checkUser(libNum, password);
+        }
+    }
+
+    private void checkUser(String libNum, String password) {
+        boolean succeed = biblioteca.checkUser(libNum, password);
+        if(succeed) {
+            System.out.println("login succeed!");
+            isLogin = true;
+        }
+        else {
+            System.out.println("library number or password error!");
         }
     }
 }
