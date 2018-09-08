@@ -18,6 +18,8 @@ public class Biblioteca {
     private List<Movie> movies;
     private List<User> users;
 
+    private LoginInfo loginInfo;
+
     public List<Book> getValidBooks() {
         return books.stream().filter(book -> !book.isCheckout()).collect(Collectors.toList());
     }
@@ -58,6 +60,11 @@ public class Biblioteca {
         initBooks();
         initMovies();
         initUsers();
+        initLoginStatus();
+    }
+
+    private void initLoginStatus() {
+        loginInfo = LoginInfo.builder().build();
     }
 
     private void initUsers() {
@@ -66,12 +73,18 @@ public class Biblioteca {
                 .builder()
                 .libNum("111-2222")
                 .password("1234")
+                .name("zhangsan")
+                .email("zhangsan@qq.com")
+                .phoneNum("12345678910")
                 .build()
         );
         users.add(User
                 .builder()
                 .libNum("123-3333")
                 .password("2345")
+                .name("lisi")
+                .email("lisi@qq.com")
+                .phoneNum("12345678911")
                 .build()
         );
     }
@@ -171,5 +184,16 @@ public class Biblioteca {
             return false;
         }
         return true;
+    }
+
+    public boolean isLogin() {
+        return loginInfo.isLogin();
+    }
+
+    public User findUserByLibNum(String loginLibNum) {
+        return users
+                .stream()
+                .filter(user -> user.getLibNum().equals(loginLibNum))
+                .collect(Collectors.toList()).get(0);
     }
 }

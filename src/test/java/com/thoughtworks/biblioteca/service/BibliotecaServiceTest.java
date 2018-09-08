@@ -164,13 +164,13 @@ public class BibliotecaServiceTest {
     @Test
     public void should_checkout_successful() {
         //given
-        String input = Options.CHECKOUT_BOOK.ordinal() + "\n" + VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
+        String input = VALID_CHECKOUT + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
         //when
-        bibliotecaService.mainMenu();
+        bibliotecaService.checkoutBook();
         String actual = bytes.toString();
         //then
         assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize - 1);
@@ -180,12 +180,12 @@ public class BibliotecaServiceTest {
     @Test
     public void should_notify_customer_when_checkout_failure() {
         //given
-        String input = Options.CHECKOUT_BOOK.ordinal() + "\n" + INVALID_OPTION + "\n" + Options.QUIT.ordinal();
+        String input = INVALID_OPTION + "\n" + Options.QUIT.ordinal();
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
         //when
-        bibliotecaService.mainMenu();
+        bibliotecaService.checkoutBook();
         String actual = bytes.toString();
         //then
         assertThat(actual).contains("That book is not available.");
@@ -295,5 +295,19 @@ public class BibliotecaServiceTest {
         assertThat(actual).contains("Please enter your library number:");
         assertThat(actual).contains("Please enter your password:");
         assertThat(actual).contains("library number or password error!");
+    }
+
+    @Test
+    public void should_login_before_see_user_info() {
+        //given
+        String input = Options.GET_USER_INFO.ordinal() + "\n" + PREDEFINED_LIB_NUM + "\n" + ERROR_PASSWORD;
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        BibliotecaService bibliotecaService = new BibliotecaService();
+        //when
+        bibliotecaService.getUserInfo();
+        String actual = bytes.toString();
+        //then
+        assertThat(actual).contains("Please login first:");
     }
 }

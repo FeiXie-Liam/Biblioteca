@@ -11,15 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class User {
+public class LoginInfo {
     private String libNum;
-    private String password;
-    private String name;
-    private String email;
-    private String phoneNum;
-
-    @Override
-    public String toString() {
-        return String.format("name: %s, email: %s, phoneNum: %s", name, email, phoneNum);
-    }
+    @Builder.Default
+    private boolean isLogin = false;
 }

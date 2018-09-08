@@ -2,7 +2,9 @@ package com.thoughtworks.biblioteca.service;
 
 import com.thoughtworks.biblioteca.model.Biblioteca;
 import com.thoughtworks.biblioteca.model.Book;
+import com.thoughtworks.biblioteca.model.LoginInfo;
 import com.thoughtworks.biblioteca.model.Movie;
+import com.thoughtworks.biblioteca.model.User;
 import com.thoughtworks.biblioteca.utils.Options;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,6 @@ import java.util.Scanner;
 public class BibliotecaService {
     private Biblioteca biblioteca;
     private Scanner sc;
-    private boolean isLogin = false;
 
     public BibliotecaService() {
         biblioteca = new Biblioteca();
@@ -32,21 +33,28 @@ public class BibliotecaService {
 
             switch (option) {
                 case 0:
-                    listAllBooks();
+                    if(isLogin())
+                        getUserInfo();
                     break;
                 case 1:
-                    listAllMovies();
+                    listAllBooks();
                     break;
                 case 2:
-                    checkoutBook();
+                    listAllMovies();
                     break;
                 case 3:
-                    returnBook();
+                    if(isLogin())
+                        checkoutBook();
                     break;
                 case 4:
-                    checkoutMovie();
+                    if(isLogin())
+                        returnBook();
                     break;
                 case 5:
+                    if(isLogin())
+                        checkoutMovie();
+                    break;
+                case 6:
                     System.out.println("bye!");
                     return;
                 default:
@@ -57,7 +65,7 @@ public class BibliotecaService {
 
     private void getMainOptions() {
         System.out.println("----------");
-        Options[] options = {Options.LIST_ALL_BOOKS, Options.LIST_ALL_MOVIES, Options.CHECKOUT_BOOK, Options
+        Options[] options = {Options.GET_USER_INFO, Options.LIST_ALL_BOOKS, Options.LIST_ALL_MOVIES, Options.CHECKOUT_BOOK, Options
                 .RETURN_BOOK, Options.CHECKOUT_MOVIE, Options.QUIT};
         for (int i = 0; i < options.length; i++) {
             System.out.println(options[i].ordinal() + ": " + options[i].name());
@@ -117,7 +125,7 @@ public class BibliotecaService {
     }
 
     public void login() {
-        if (!isLogin) {
+        if (!biblioteca.isLogin()) {
             System.out.println("Please enter your library number:");
             String libNum = sc.next();
             System.out.println("Please enter your password:");
@@ -130,10 +138,27 @@ public class BibliotecaService {
         boolean succeed = biblioteca.checkUser(libNum, password);
         if(succeed) {
             System.out.println("login succeed!");
-            isLogin = true;
+            biblioteca.setLoginInfo(LoginInfo.builder().libNum(libNum).isLogin(true).build());
         }
         else {
             System.out.println("library number or password error!");
         }
+    }
+
+    public void getUserInfo() {
+        if(isLogin()) {
+            String loginLibNum = biblioteca.getLoginInfo().getLibNum();
+            User loginUser = biblioteca.findUserByLibNum(loginLibNum);
+            System.out.println(loginUser.toString());
+        }
+
+    }
+
+    private boolean isLogin() {
+        if(!biblioteca.isLogin()) {
+            System.out.println("Please login first:");
+            login();
+        }
+        return biblioteca.isLogin();
     }
 }

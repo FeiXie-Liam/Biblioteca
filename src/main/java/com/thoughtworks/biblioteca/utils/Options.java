@@ -1,6 +1,12 @@
 package com.thoughtworks.biblioteca.utils;
 
 public enum Options {
+    GET_USER_INFO {
+        @Override
+        public String toString() {
+            return String.valueOf(super.ordinal());
+        }
+    },
     LIST_ALL_BOOKS {
         @Override
         public String toString() {
@@ -36,5 +42,5 @@ public enum Options {
         public String toString() {
             return String.valueOf(super.ordinal());
         }
-    }
+    };
 }
