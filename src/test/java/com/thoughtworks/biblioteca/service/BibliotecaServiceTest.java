@@ -154,11 +154,11 @@ public class BibliotecaServiceTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
+        int originSize = bibliotecaService.getBookRepository().getValidBooks().size();
         //when
         bibliotecaService.checkoutBook();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize - 1);
+        assertThat(bibliotecaService.getBookRepository().getValidBooks().size()).isEqualTo(originSize - 1);
     }
 
     @Test
@@ -168,12 +168,12 @@ public class BibliotecaServiceTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
+        int originSize = bibliotecaService.getBookRepository().getValidBooks().size();
         //when
         bibliotecaService.checkoutBook();
         String actual = bytes.toString();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize - 1);
+        assertThat(bibliotecaService.getBookRepository().getValidBooks().size()).isEqualTo(originSize - 1);
         assertThat(actual).contains("Thank you! Enjoy the book");
     }
 
@@ -198,11 +198,11 @@ public class BibliotecaServiceTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getValidBooks().size();
+        int originSize = bibliotecaService.getBookRepository().getValidBooks().size();
         //when
         bibliotecaService.returnBook();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getValidBooks().size()).isEqualTo(originSize + 1);
+        assertThat(bibliotecaService.getBookRepository().getValidBooks().size()).isEqualTo(originSize + 1);
     }
 
     @Test
@@ -258,11 +258,11 @@ public class BibliotecaServiceTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         BibliotecaService bibliotecaService = new BibliotecaService();
-        int originSize = bibliotecaService.getBiblioteca().getValidMovies().size();
+        int originSize = bibliotecaService.getMovieRepository().getValidMovies().size();
         //when
         bibliotecaService.checkoutMovie();
         //then
-        assertThat(bibliotecaService.getBiblioteca().getValidMovies().size()).isEqualTo(originSize - 1);
+        assertThat(bibliotecaService.getMovieRepository().getValidMovies().size()).isEqualTo(originSize - 1);
     }
 
     @Test

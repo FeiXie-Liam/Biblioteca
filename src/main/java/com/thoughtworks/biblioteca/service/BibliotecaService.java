@@ -5,6 +5,9 @@ import com.thoughtworks.biblioteca.model.Book;
 import com.thoughtworks.biblioteca.model.LoginInfo;
 import com.thoughtworks.biblioteca.model.Movie;
 import com.thoughtworks.biblioteca.model.User;
+import com.thoughtworks.biblioteca.repository.BookRepository;
+import com.thoughtworks.biblioteca.repository.MovieRepository;
+import com.thoughtworks.biblioteca.repository.UserRepository;
 import com.thoughtworks.biblioteca.utils.Options;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +19,16 @@ import java.util.Scanner;
 @Setter
 public class BibliotecaService {
     private Biblioteca biblioteca;
+    private BookRepository bookRepository;
+    private MovieRepository movieRepository;
+    private UserRepository userRepository;
     private Scanner sc;
 
     public BibliotecaService() {
         biblioteca = new Biblioteca();
-        init();
+        bookRepository = new BookRepository();
+        movieRepository = new MovieRepository();
+        userRepository = new UserRepository();
         sc = new Scanner(System.in);
         System.out.println("Welcome Biblioteca!");
     }
@@ -72,20 +80,17 @@ public class BibliotecaService {
         }
     }
 
-    private void init() {
-        biblioteca.init();
-    }
 
 
     public void listAllBooks() {
-        List<Book> books = biblioteca.getValidBooks();
+        List<Book> books = bookRepository.getValidBooks();
         for (Book book : books) {
             System.out.println(book.toString());
         }
     }
 
     public void listAllMovies() {
-        List<Movie> movies = biblioteca.getValidMovies();
+        List<Movie> movies = movieRepository.getValidMovies();
         for (Movie movie : movies) {
             System.out.println(movie.toString());
         }
@@ -94,7 +99,7 @@ public class BibliotecaService {
     public void checkoutBook() {
         System.out.println("Please select checkout book id:");
         int bookId = sc.nextInt();
-        boolean succeed = biblioteca.checkoutBook(bookId);
+        boolean succeed = bookRepository.checkoutBook(bookId);
         if (succeed) {
             System.out.println("Thank you! Enjoy the book.");
         } else {
@@ -105,7 +110,7 @@ public class BibliotecaService {
     public void returnBook() {
         System.out.println("Please enter your book id to return:");
         int bookId = sc.nextInt();
-        boolean succeed = biblioteca.returnBook(bookId);
+        boolean succeed = bookRepository.returnBook(bookId);
         if (succeed) {
             System.out.println("Thank you for returning the book.");
         } else {
@@ -116,7 +121,7 @@ public class BibliotecaService {
     public void checkoutMovie() {
         System.out.println("Please select checkout movie id:");
         int movieId = sc.nextInt();
-        boolean succeed = biblioteca.checkoutMovie(movieId);
+        boolean succeed = movieRepository.checkoutMovie(movieId);
         if (succeed) {
             System.out.println("Thank you! Enjoy the movie.");
         } else {
@@ -135,7 +140,7 @@ public class BibliotecaService {
     }
 
     private void checkUser(String libNum, String password) {
-        boolean succeed = biblioteca.checkUser(libNum, password);
+        boolean succeed = userRepository.checkUser(libNum, password);
         if(succeed) {
             System.out.println("login succeed!");
             biblioteca.setLoginInfo(LoginInfo.builder().libNum(libNum).isLogin(true).build());
@@ -148,7 +153,7 @@ public class BibliotecaService {
     public void getUserInfo() {
         if(isLogin()) {
             String loginLibNum = biblioteca.getLoginInfo().getLibNum();
-            User loginUser = biblioteca.findUserByLibNum(loginLibNum);
+            User loginUser = userRepository.findUserByLibNum(loginLibNum);
             System.out.println(loginUser.toString());
         }
 
