@@ -1,16 +1,15 @@
-package com.thoughtworks.biblioteca.model;
+package com.thoughtworks.biblioteca.service;
 
-import lombok.AllArgsConstructor;
+import com.thoughtworks.biblioteca.model.LoginInfo;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
-public class Biblioteca {
+public class LoginService {
     private LoginInfo loginInfo;
 
-    public Biblioteca() {
+    public LoginService() {
         initLoginStatus();
     }
 

@@ -1,6 +1,5 @@
 package com.thoughtworks.biblioteca.service;
 
-import com.thoughtworks.biblioteca.model.Biblioteca;
 import com.thoughtworks.biblioteca.model.Book;
 import com.thoughtworks.biblioteca.model.LoginInfo;
 import com.thoughtworks.biblioteca.model.Movie;
@@ -18,17 +17,17 @@ import java.util.Scanner;
 @Getter
 @Setter
 public class BibliotecaService {
-    private Biblioteca biblioteca;
     private BookRepository bookRepository;
     private MovieRepository movieRepository;
     private UserRepository userRepository;
+    private LoginService loginService;
     private Scanner sc;
 
     public BibliotecaService() {
-        biblioteca = new Biblioteca();
         bookRepository = new BookRepository();
         movieRepository = new MovieRepository();
         userRepository = new UserRepository();
+        loginService = new LoginService();
         sc = new Scanner(System.in);
         System.out.println("Welcome Biblioteca!");
     }
@@ -41,8 +40,9 @@ public class BibliotecaService {
 
             switch (option) {
                 case 0:
-                    if(isLogin())
+                    if(isLogin()){
                         getUserInfo();
+                    }
                     break;
                 case 1:
                     listAllBooks();
@@ -51,16 +51,19 @@ public class BibliotecaService {
                     listAllMovies();
                     break;
                 case 3:
-                    if(isLogin())
+                    if(isLogin()){
                         checkoutBook();
+                    }
                     break;
                 case 4:
-                    if(isLogin())
+                    if(isLogin()){
                         returnBook();
+                    }
                     break;
                 case 5:
-                    if(isLogin())
+                    if(isLogin()){
                         checkoutMovie();
+                    }
                     break;
                 case 6:
                     System.out.println("bye!");
@@ -130,7 +133,7 @@ public class BibliotecaService {
     }
 
     public void login() {
-        if (!biblioteca.isLogin()) {
+        if (!loginService.isLogin()) {
             System.out.println("Please enter your library number:");
             String libNum = sc.next();
             System.out.println("Please enter your password:");
@@ -143,7 +146,7 @@ public class BibliotecaService {
         boolean succeed = userRepository.checkUser(libNum, password);
         if(succeed) {
             System.out.println("login succeed!");
-            biblioteca.setLoginInfo(LoginInfo.builder().libNum(libNum).isLogin(true).build());
+            loginService.setLoginInfo(LoginInfo.builder().libNum(libNum).isLogin(true).build());
         }
         else {
             System.out.println("library number or password error!");
@@ -152,7 +155,7 @@ public class BibliotecaService {
 
     public void getUserInfo() {
         if(isLogin()) {
-            String loginLibNum = biblioteca.getLoginInfo().getLibNum();
+            String loginLibNum = loginService.getLoginInfo().getLibNum();
             User loginUser = userRepository.findUserByLibNum(loginLibNum);
             System.out.println(loginUser.toString());
         }
@@ -160,10 +163,10 @@ public class BibliotecaService {
     }
 
     private boolean isLogin() {
-        if(!biblioteca.isLogin()) {
+        if(!loginService.isLogin()) {
             System.out.println("Please login first:");
             login();
         }
-        return biblioteca.isLogin();
+        return loginService.isLogin();
     }
 }
